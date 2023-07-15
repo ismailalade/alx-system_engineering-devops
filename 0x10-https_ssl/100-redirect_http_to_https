@@ -20,6 +20,7 @@ global
 defaults
 	log	global
 	mode	http
+	option forwardfor
 	option	httplog
 	option	dontlognull
         timeout connect 5000
@@ -33,17 +34,16 @@ defaults
 	errorfile 503 /etc/haproxy/errors/503.http
 	errorfile 504 /etc/haproxy/errors/504.http
 
-frontend web_frontend
-        bind *:80
-        http-request set-header Host %[hdr(host)]
-        redirect scheme https code 301 if !{ ssl_fc }
-        default_backend web_backend
+frontend 218715-web
+    	bind *:80
+    	bind *:443 ssl crt /etc/ssl/www.heardbygod.tech/www.heardbygod.tech.pem
 
-frontend web_frontend_secure
-        bind *:443 ssl crt /etc/haproxy/ssl/www.besthor.tech.pem
-        default_backend web_backend
+    	# Redirect if HTTPS is not used
+    	redirect scheme https code 301 if !{ ssl_fc }
 
-backend web_backend
-        balance roundrobin
-        server web-01 100.25.145.122 check
-        server web-02 54.86.80.14 check
+    	default_backend 202812-web_servers
+
+backend 218715-web_servers
+    	balance roundrobin
+    	server web-01 100.25.145.122 check
+    	server web-02 54.86.80.14 check
