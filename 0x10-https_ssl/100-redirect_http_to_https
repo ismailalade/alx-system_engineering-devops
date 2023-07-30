@@ -34,16 +34,16 @@ defaults
 	errorfile 503 /etc/haproxy/errors/503.http
 	errorfile 504 /etc/haproxy/errors/504.http
 
-frontend 218715-web
+frontend 219799-web
     	bind *:80
     	bind *:443 ssl crt /etc/ssl/www.heardbygod.tech/www.heardbygod.tech.pem
 
     	# Redirect if HTTPS is not used
     	redirect scheme https code 301 if !{ ssl_fc }
 
-    	default_backend 202812-web_servers
+    	default_backend 219799-web_servers
 
-backend 218715-web_servers
+backend 219799-web_servers
     	balance roundrobin
     	server web-01 100.25.145.122 check
     	server web-02 54.86.80.14 check
